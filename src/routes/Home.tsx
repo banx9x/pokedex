@@ -1,20 +1,7 @@
-import { SearchIcon } from '@chakra-ui/icons';
-import {
-  Box,
-  Button,
-  Container,
-  Flex,
-  Grid,
-  Heading,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  Spinner,
-  Text,
-} from '@chakra-ui/react';
+import { Button, Flex, Grid, Spinner } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import PokemonCard from './PokemonCard';
+import PokemonCard from '../components/PokemonCard';
 
 type GetListPokemonResponse = {
   count: number;
@@ -28,7 +15,7 @@ type Pokemon = {
   url: string;
 };
 
-function App() {
+export default function Home() {
   const [page, setPage] = useState(1);
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ['pokemons', page],
@@ -39,30 +26,14 @@ function App() {
   });
 
   return (
-    <Container maxWidth={'container.xl'}>
-      <Flex gap={60} alignItems='flex-end' paddingBlock={6}>
-        <Flex flexDirection='column'>
-          <Heading as='h1'>Pokedéx</Heading>
-          <Text>
-            Search for Pokémon by name or using the National Pokédex number
-          </Text>
-        </Flex>
-
-        <Box flex={1}>
-          <InputGroup size='lg'>
-            <InputLeftElement>
-              <SearchIcon />
-            </InputLeftElement>
-            <Input placeholder='What Pokémon are you looking for?' />
-          </InputGroup>
-        </Box>
-      </Flex>
-
+    <Flex flexDirection='column'>
       <Grid templateColumns='repeat(4, 1fr)' gap={6}>
         {isLoading ? (
           <Spinner />
         ) : (
-          data?.results.map((pokemon) => <PokemonCard url={pokemon.url} />)
+          data?.results.map((pokemon) => (
+            <PokemonCard key={pokemon.name} name={pokemon.name} />
+          ))
         )}
       </Grid>
 
@@ -83,8 +54,6 @@ function App() {
           3
         </Button>
       </Flex>
-    </Container>
+    </Flex>
   );
 }
-
-export default App;
